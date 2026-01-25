@@ -1,0 +1,11 @@
+{
+  "domain": "franklin_wh_sunspec",
+  "name": "FranklinWH SunSpec",
+  "codeowners": ["@cecilkootz"],
+  "config_flow": true,
+  "documentation": "https://github.com/cecilkootz/franklin-wh-sunspec",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/cecilkootz/franklin-wh-sunspec/issues",
+  "requirements": ["pysunspec2==1.1.8"],
+  "version": "1.0.0"
+}

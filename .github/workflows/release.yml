@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number (e.g., 1.0.0)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate version format
+        run: |
+          if ! echo "${{ inputs.version }}" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$'; then
+            echo "Error: Version must be in semantic versioning format (e.g., 1.0.0 or 1.0.0-beta.1)"
+            exit 1
+          fi
+
+      - name: Update version in manifest.json
+        run: |
+          cd custom_components/franklin_wh_sunspec
+          jq '.version = "${{ inputs.version }}"' manifest.json > manifest.json.tmp
+          mv manifest.json.tmp manifest.json
+          cat manifest.json
+
+      - name: Create release zip
+        run: |
+          cd custom_components
+          zip -r ../franklin_wh_sunspec.zip franklin_wh_sunspec
+
+      - name: Commit version update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add custom_components/franklin_wh_sunspec/manifest.json
+          git commit -m "Bump version to ${{ inputs.version }}"
+          git push
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: v${{ inputs.version }}
+          body: |
+            ## FranklinWH SunSpec v${{ inputs.version }}
+
+            ### Installation via HACS
+
+            1. Open HACS in Home Assistant
+            2. Click on "Integrations"
+            3. Click the three dots menu and select "Custom repositories"
+            4. Add this repository URL and select "Integration" as the category
+            5. Search for "FranklinWH SunSpec" and install
+
+            ### Manual Installation
+
+            1. Download `franklin_wh_sunspec.zip` from this release
+            2. Extract to your `custom_components` directory
+            3. Restart Home Assistant
+
+          files: franklin_wh_sunspec.zip
+          prerelease: ${{ inputs.prerelease }}
+          generate_release_notes: true

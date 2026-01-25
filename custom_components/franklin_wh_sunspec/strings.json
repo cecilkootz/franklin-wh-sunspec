@@ -1,0 +1,85 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to FranklinWH Device",
+        "description": "Enter the connection details for your FranklinWH aGate X.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "slave_id": "Modbus Slave ID"
+        },
+        "data_description": {
+          "host": "IP address or hostname of your FranklinWH aGate X",
+          "port": "Modbus TCP port (default: 502)",
+          "slave_id": "Modbus slave ID (default: 1)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the device. Please check the host, port, and slave ID."
+    },
+    "abort": {
+      "already_configured": "This device is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "FranklinWH Options",
+        "data": {
+          "scan_interval": "Update interval (seconds)"
+        },
+        "data_description": {
+          "scan_interval": "How often to poll the device for updates (5-60 seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "solar_power": {
+        "name": "Solar Power"
+      },
+      "solar_total": {
+        "name": "Solar Energy Total"
+      },
+      "battery_soc": {
+        "name": "Battery State of Charge"
+      },
+      "battery_charge": {
+        "name": "Battery Charge"
+      },
+      "battery_discharge": {
+        "name": "Battery Discharge"
+      },
+      "battery_health": {
+        "name": "Battery Health"
+      },
+      "grid_import": {
+        "name": "Grid Import"
+      },
+      "grid_export": {
+        "name": "Grid Export"
+      },
+      "grid_export_total": {
+        "name": "Grid Export Total"
+      },
+      "grid_import_total": {
+        "name": "Grid Import Total"
+      },
+      "home_load": {
+        "name": "Home Load"
+      },
+      "excess_power": {
+        "name": "Excess Power"
+      },
+      "voltage": {
+        "name": "Grid Voltage"
+      },
+      "frequency": {
+        "name": "Grid Frequency"
+      }
+    }
+  }
+}
