@@ -70,7 +70,10 @@ class FranklinWHCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             hz_sf = m701.points["Hz_SF"].value or 0
             totwh_sf = m701.points["TotWh_SF"].value or 0
 
-            grid_power = (m701.points["W"].value or 0) * (10 ** w_sf)
+            # Negate: SunSpec Model 701 uses generator convention where
+            # negative W = exporting to grid, positive W = importing from grid.
+            # We normalise to positive = export, negative = import.
+            grid_power = -((m701.points["W"].value or 0) * (10 ** w_sf))
             voltage = (m701.points["LLV"].value or 0) * (10 ** v_sf)
             frequency = (m701.points["Hz"].value or 0) * (10 ** hz_sf)
             grid_export_total = (m701.points["TotWhInj"].value or 0) * (10 ** totwh_sf)
